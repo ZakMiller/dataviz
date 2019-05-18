@@ -1,5 +1,5 @@
 <template>
-  <ag-grid-vue style="width: 1000px; height: 500px;" class="ag-theme-balham" :columnDefs="columnDefs" :rowData="rowData"></ag-grid-vue>
+  <ag-grid-vue style="width: 1000px; height: 300px;" class="ag-theme-balham" :columnDefs="columnDefs" :rowData="rowData"></ag-grid-vue>
 </template>
 <script lang="ts">
 import {AgGridVue} from 'ag-grid-vue';
@@ -21,7 +21,6 @@ export default Vue.extend({
       };
     },
     beforeMount(): void {
-      //const fields = ['make', 'model', 'price'];
       const records = this.$store.getters.flatRecords;
       const columns = getColumns(records);
       this.columnDefs = columns.map(f => getHeader(f));
