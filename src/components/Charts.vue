@@ -1,11 +1,12 @@
 <template>
     <div>
-        <Chart v-for="chart in chartData" :labels="chart.labels" :datasets="[{data: chart.data}]"></Chart>
+        <Chart v-for="chart in chartData" :labels="chart.labels" :datasets="datasets(chart.data)" :styles="style"></Chart>
     </div>
 </template>
 <script lang="ts">
 import Vue from 'vue';
 import Chart from '@/components/Chart.vue';
+import _ from 'lodash';
 
 export default Vue.extend({
   name: 'Charts',
@@ -21,8 +22,42 @@ export default Vue.extend({
     },
     beforeMount(): void {
       this.chartData = getChartData(this.$store.getters.flatRecords);
+    },
+    computed: {
+      style () {
+          return {
+              'max-width': '1000px',
+              display: 'inline-block',
+              position: 'relative',
+          }
+      },
+
+    },
+    methods: {
+          datasets(data: number[]) {
+          return [
+              {
+                  backgroundColor: _.times(data.length, () => getRandomColor()),
+                  data: data,
+              }
+          ]
+        },
     }
 });
+
+function getRandomColor(): string {
+    let colorString = '#';
+    _.times(6, () => colorString = colorString + randomLetter());
+    return colorString;
+}
+
+function randomLetter(): string {
+    const letters = '0123456789ABCDEF';
+    const randomIndex = Math.floor(Math.random() * (letters.length - 1));
+    const randomCharacter = letters[randomIndex];
+    return randomCharacter;
+}
+
 interface ChartData {
     chartLabel: string;
     labels: string[];
