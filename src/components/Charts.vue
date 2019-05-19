@@ -1,6 +1,9 @@
 <template>
-    <div>
-        <Chart v-for="chart in chartData" :labels="chart.labels" :datasets="datasets(chart.data)" :styles="style"></Chart>
+    <div class="m-6 p-2">
+        <div class="inline-block" v-for="chart in charts">
+            <div>{{ title(chart.chartLabel) }}</div>
+            <Chart :chartData="{labels: chart.labels, datasets: datasets(chart.data)}"></Chart>
+            </div>
     </div>
 </template>
 <script lang="ts">
@@ -20,18 +23,17 @@ export default Vue.extend({
          chartData: [] as ChartData[],
       }
     },
-    beforeMount(): void {
-      this.chartData = getChartData(this.$store.getters.flatRecords);
-    },
     computed: {
       style () {
           return {
-              'max-width': '1000px',
+              width: '300px',
               display: 'inline-block',
               position: 'relative',
           }
       },
-
+        charts() {
+         return getChartData(this.$store.getters.flatRecords)
+        },
     },
     methods: {
           datasets(data: number[]) {
@@ -42,6 +44,9 @@ export default Vue.extend({
               }
           ]
         },
+        title(s: string): string {
+              return _.startCase(s);
+        }
     }
 });
 
@@ -95,7 +100,7 @@ function createMapOfMaps(records: any[]): Map<string, Map<string, number>> {
                 charts.get(prop).set(val, 1);
             } else {
                 const current = charts.get(prop).get(val);
-                charts.get(prop).set(current+1);
+                charts.get(prop).set(val, current+1);
             }
         }
     }

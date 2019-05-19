@@ -1,12 +1,14 @@
 <template>
-  <ag-grid-vue style="width: 1000px; height: 300px;" class="ag-theme-balham" :columnDefs="columnDefs" :rowData="rowData"></ag-grid-vue>
+    <div class="w-full h-64">
+        <ag-grid-vue style="width: 100%; height: 100%;" class="ag-theme-balham" :columnDefs="columnDefs" :rowData="rowData"></ag-grid-vue>
+    </div>
 </template>
 <script lang="ts">
-import {AgGridVue} from 'ag-grid-vue';
-import Vue from 'vue';
-import _ from 'lodash';
+    import {AgGridVue} from "ag-grid-vue";
+    import Vue from "vue";
+    import _ from "lodash";
 
-export default Vue.extend({
+    export default Vue.extend({
   name: 'Grid',
   props: {
     msg: String,
@@ -14,18 +16,16 @@ export default Vue.extend({
   components: {
     AgGridVue,
   },
-  data() {
-      return {
-        columnDefs: null as any,
-        rowData: null as any,
-      };
-    },
-    beforeMount(): void {
-      const records = this.$store.getters.flatRecords;
-      const columns = getColumns(records);
-      this.columnDefs = columns.map(f => getHeader(f));
-      this.rowData = records;
-    },
+    computed: {
+      columnDefs() {
+          const records = this.$store.getters.flatRecords;
+          const columns = getColumns(records);
+          return columns.map(f => getHeader(f));
+      },
+        rowData() {
+            return this.$store.getters.flatRecords;
+        }
+    }
 });
 
 interface header {
